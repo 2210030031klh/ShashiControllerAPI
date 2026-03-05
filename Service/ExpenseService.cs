@@ -1,65 +1,66 @@
 namespace ShashiControllerAPI.Service;
+using Microsoft.EntityFrameworkCore;
+
+using ShashiControllerAPI.Data;
 using ShashiControllerAPI.Models;
 
-public class ExpenseService : IExpenseService
+public class ExpenseService (AppDbContext context): IExpenseService
 {
-       static List<Expense> Expenses = new List<Expense>
-    {
-        new Expense { Id = 1, Name = "Groceries1", Amount = 150, Date = DateTime.Now.AddDays(-2), Category = "Food", Description = "Weekly grocery shopping" },
-        new Expense { Id = 2, Name = "Electricity Bill", Amount = 60, Date = DateTime.Now.AddDays(-10), Category = "Utilities", Description = "Monthly electricity bill" },
-        new Expense { Id = 3, Name = "Movie Tickets", Amount = 30, Date = DateTime.Now.AddDays(-5), Category = "Entertainment", Description = "Cinema outing with friends" }
-    };
-
 
     public async Task<List<Expense>> GetAllExpensesAsync()
-    =>await Task.FromResult(Expenses);
+    =>await context.Expenses.ToListAsync();
+
 
     
 
     public async Task<Expense?> GetExpensesByIdAsync(int id)
     {
-        var result = Expenses.FirstOrDefault(e => e.Id == id);
-        return await Task.FromResult(result);
+        var result = await context.Expenses.FindAsync(id);
+        return result;
     }
     
 
-    public Task<List<Expense>> GetExpensesByCategoryAsync(string category)
+    public async Task<List<Expense>> GetExpensesByCategoryAsync(string category)
     {
-        var expensesByCategory = Expenses.Where(e => e.Category.Equals(category, StringComparison.OrdinalIgnoreCase)).ToList();
-        return Task.FromResult(expensesByCategory);
+        return await context.Expenses
+        .Where(e => e.Category.ToLower() == category.ToLower())
+        .ToListAsync();
     }
 
-    public Task<Expense> AddExpenseAsync(Expense expense)
+    public async Task<Expense> AddExpenseAsync(Expense expense)
     {
-        expense.Id = Expenses.Max(e => e.Id) + 1;
-        Expenses.Add(expense);
-        return Task.FromResult(expense);
+        // expense.Id = await context.Expenses.MaxAsync(e => e.Id) + 1;
+        context.Expenses.Add(expense);
+        await context.SaveChangesAsync();
+        return expense;
     }
 
-    public Task<bool> UpdateExpenseAsync(int id, Expense expense)
+    public async Task<bool> UpdateExpenseAsync(int id, Expense expense)
     {
-        var existingExpense = Expenses.FirstOrDefault(e => e.Id == id);
+        var existingExpense =await  context.Expenses.FirstOrDefaultAsync(e => e.Id == id);
         if (existingExpense == null)
-            return Task.FromResult(false);
+            return false;
 
         existingExpense.Name = expense.Name;
         existingExpense.Amount = expense.Amount;
         existingExpense.Date = expense.Date;
         existingExpense.Category = expense.Category;
         existingExpense.Description = expense.Description;
-
-        return Task.FromResult(true);
+        await context.SaveChangesAsync();
+        return  true;
     }
 
-    public Task<bool> DeleteExpenseAsync(int id)
+    public async Task<bool> DeleteExpenseAsync(int id)
     {
-        var expenseToRemove = Expenses.FirstOrDefault(e => e.Id == id);
+        var expenseToRemove = await context.Expenses.FirstOrDefaultAsync(e => e.Id == id);
         if (expenseToRemove == null)
-            return Task.FromResult(false);
+            return false;
 
-        Expenses.Remove(expenseToRemove);
-        return Task.FromResult(true);
+        context.Expenses.Remove(expenseToRemove);
+        await context.SaveChangesAsync();
+        return true;
     }
+    
 
 
 }   

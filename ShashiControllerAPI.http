@@ -2,5 +2,26 @@
 
 GET {{ShashiControllerAPI_HostAddress}}/weatherforecast/
 Accept: application/json
+###
+GET {{ShashiControllerAPI_HostAddress}}/expense/
+Accept: application/json
 
 ###
+GET {{ShashiControllerAPI_HostAddress}}/expense/1
+Accept: application/json
+
+###
+GET {{ShashiControllerAPI_HostAddress}}/expense/category/Food
+Accept: application/json
+
+###
+POST {{ShashiControllerAPI_HostAddress}}/api/Expense
+Content-Type: application/json
+
+{
+  "name": "Lunch",
+  "amount": 1500,
+  "date": "2024-03-05T12:00:00",
+  "category": "Food",
+  "description": "Lunch at restaurant"
+}
