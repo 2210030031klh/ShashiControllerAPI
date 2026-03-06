@@ -749,3 +749,4 @@ C:\Projects\ShashiControllerAPI\obj\Debug\net10.0\refint\ShashiControllerAPI.dll
 C:\Projects\ShashiControllerAPI\obj\Debug\net10.0\ShashiControllerAPI.pdb
 C:\Projects\ShashiControllerAPI\obj\Debug\net10.0\ShashiControllerAPI.genruntimeconfig.cache
 C:\Projects\ShashiControllerAPI\obj\Debug\net10.0\ref\ShashiControllerAPI.dll
+C:\Projects\ShashiControllerAPI\bin\Debug\net10.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

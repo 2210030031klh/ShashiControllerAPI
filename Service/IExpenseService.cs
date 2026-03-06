@@ -1,18 +1,19 @@
+using ShashiControllerAPI.DTOs;
 using ShashiControllerAPI.Models;
 
 namespace ShashiControllerAPI.Service;
 
 public interface IExpenseService
 {
-    Task<List<Expense>> GetAllExpensesAsync();
+    Task<List<GetExpenseDto>> GetAllExpensesAsync();
 
-    Task<Expense?> GetExpensesByIdAsync(int id);
+    Task<GetExpenseDto?> GetExpensesByIdAsync(int id);
 
-    Task<List<Expense>> GetExpensesByCategoryAsync(string category);
+    Task<List<GetExpenseDto>> GetExpensesByCategoryAsync(string category);
 
-    Task<Expense> AddExpenseAsync(Expense expense);
+    Task<CreateExpenseDto> AddExpenseAsync(CreateExpenseDto expense);
 
-    Task<bool> UpdateExpenseAsync(int id, Expense expense);
+    Task<bool> UpdateExpenseAsync(int id, UpdateExpenseDto  expense);
 
     Task<bool> DeleteExpenseAsync(int id);
 
