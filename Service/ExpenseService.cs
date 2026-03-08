@@ -18,9 +18,6 @@ public class ExpenseService (AppDbContext context): IExpenseService
             Category = e.Category
         }).ToListAsync();
 
-
-    
-
     public async Task<GetExpenseDto?> GetExpensesByIdAsync(int id)
     {
         var result = await context.Expenses
@@ -96,7 +93,5 @@ public class ExpenseService (AppDbContext context): IExpenseService
         await context.SaveChangesAsync();
         return true;
     }
-    
-
 
 }   
