@@ -17,68 +17,177 @@ namespace ShashiControllerAPI.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.3")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("ProductVersion", "9.0.0")
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
-            modelBuilder.Entity("ShashiControllerAPI.Entities.User", b =>
+            modelBuilder.Entity("ShashiControllerAPI.Models.Category", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("CategoryId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
 
-                    b.Property<string>("PasswordHash")
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("CategoryId"));
+
+                    b.Property<string>("CategoryName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
-                    b.Property<string>("RefreshToken")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("char(36)");
 
-                    b.Property<DateTime?>("RefreshTokenExpiryTime")
-                        .HasColumnType("datetime2");
+                    b.HasKey("CategoryId");
 
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.HasIndex("UserId");
 
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.ToTable("Categories");
 
-                    b.HasKey("Id");
-
-                    b.ToTable("Users");
+                    b.HasData(
+                        new
+                        {
+                            CategoryId = 1,
+                            CategoryName = "Food"
+                        },
+                        new
+                        {
+                            CategoryId = 2,
+                            CategoryName = "Transport"
+                        },
+                        new
+                        {
+                            CategoryId = 3,
+                            CategoryName = "Shopping"
+                        },
+                        new
+                        {
+                            CategoryId = 4,
+                            CategoryName = "Bills"
+                        },
+                        new
+                        {
+                            CategoryId = 5,
+                            CategoryName = "Health"
+                        },
+                        new
+                        {
+                            CategoryId = 6,
+                            CategoryName = "Entertainment"
+                        },
+                        new
+                        {
+                            CategoryId = 7,
+                            CategoryName = "Other"
+                        });
                 });
 
             modelBuilder.Entity("ShashiControllerAPI.Models.Expense", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("ExpenseId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("char(36)");
 
                     b.Property<int>("Amount")
                         .HasColumnType("int");
 
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<DateOnly>("CreatedAt")
+                        .HasColumnType("date");
 
                     b.Property<DateOnly>("Date")
                         .HasColumnType("date");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("char(36)");
 
-                    b.HasKey("Id");
+                    b.HasKey("ExpenseId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Expenses");
+                });
+
+            modelBuilder.Entity("ShashiControllerAPI.Models.User", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateOnly>("CreatedAt")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("RefreshTokenExpiryTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("UserId");
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("ShashiControllerAPI.Models.Category", b =>
+                {
+                    b.HasOne("ShashiControllerAPI.Models.User", "User")
+                        .WithMany("Categories")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ShashiControllerAPI.Models.Expense", b =>
+                {
+                    b.HasOne("ShashiControllerAPI.Models.Category", "Category")
+                        .WithMany("Expenses")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ShashiControllerAPI.Models.User", "User")
+                        .WithMany("Expenses")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ShashiControllerAPI.Models.Category", b =>
+                {
+                    b.Navigation("Expenses");
+                });
+
+            modelBuilder.Entity("ShashiControllerAPI.Models.User", b =>
+                {
+                    b.Navigation("Categories");
+
+                    b.Navigation("Expenses");
                 });
 #pragma warning restore 612, 618
         }

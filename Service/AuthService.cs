@@ -5,9 +5,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using ShashiControllerAPI.Data;
 using ShashiControllerAPI.DTOs;
-using ShashiControllerAPI.Entities;
-using Microsoft.EntityFrameworkCore;
 using ShashiControllerAPI.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 
 namespace ShashiControllerAPI.Service;
@@ -47,17 +46,18 @@ public class AuthService(AppDbContext context,IConfiguration configuration) : IA
 
     public async Task<User?> RegisterAsync(UserDto request)
     {
-        if(await context.Users.AnyAsync(u => u.Username == request.Username))
-        {
-            
-            return null; // User already exists
-        }
-        var user=new User();
-        var hashedPassword = new PasswordHasher<User>()
-        .HashPassword(user, request.Password);
+        if (await context.Users.AnyAsync(u => u.Username == request.Username))
+            return null;
 
-        user.Username = request.Username;
-        user.PasswordHash = hashedPassword;
+        var user = new User
+        {
+            Username = request.Username,
+            Email = request.Email,
+            PasswordHash = string.Empty,  // temp, will be overwritten below
+            Role = request.Role
+        };
+
+        user.PasswordHash = new PasswordHasher<User>().HashPassword(user, request.Password);
         context.Users.Add(user);
         await context.SaveChangesAsync();
         return user;
@@ -72,7 +72,7 @@ public class AuthService(AppDbContext context,IConfiguration configuration) : IA
     }
     private async Task<User?> ValidateRefreshTokenAsync(Guid userId, string refreshToken)
     {
-        var user = await context.Users.FindAsync(userId);
+        var user = await context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
         if(user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
         {
             return null; // Invalid refresh token
@@ -95,7 +95,7 @@ public class AuthService(AppDbContext context,IConfiguration configuration) : IA
         var claims= new List<Claim>
         {
             new Claim(ClaimTypes.Name,user.Username),
-            new Claim(ClaimTypes.NameIdentifier,user.Id.ToString()),
+            new Claim(ClaimTypes.NameIdentifier,user.UserId.ToString()),
             new Claim(ClaimTypes.Role,user.Role)
         };
         var key = new SymmetricSecurityKey(

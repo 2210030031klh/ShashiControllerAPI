@@ -18,7 +18,7 @@ public class Expense
 
     public Guid UserId { get; set; }//FK
 
-    public Guid CategoryId { get; set; }//FK
+    public int CategoryId { get; set; }//FK
 
     public int Amount { get; set; }
 

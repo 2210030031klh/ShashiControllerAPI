@@ -1,5 +1,5 @@
 using ShashiControllerAPI.DTOs;
-using ShashiControllerAPI.Entities;
+using ShashiControllerAPI.Models;
 
 namespace ShashiControllerAPI.Service;
 
@@ -9,4 +9,6 @@ public interface IAuthService
     Task<TokenResponseDto?> LoginAsync(UserDto request);
 
     Task<TokenResponseDto?> RefreshTokenAsync(RefreshTokenRequestDto request);
+
+    
 }

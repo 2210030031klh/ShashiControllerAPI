@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Project1\\ShashiControllerAPI\\ShashiControllerAPI.csproj": {}
+    "/Users/shashi/Desktop/Desktop/Dotnet/ShashiControllerAPI/ShashiControllerAPI.csproj": {}
   },
   "projects": {
-    "C:\\Project1\\ShashiControllerAPI\\ShashiControllerAPI.csproj": {
+    "/Users/shashi/Desktop/Desktop/Dotnet/ShashiControllerAPI/ShashiControllerAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Project1\\ShashiControllerAPI\\ShashiControllerAPI.csproj",
+        "projectUniqueName": "/Users/shashi/Desktop/Desktop/Dotnet/ShashiControllerAPI/ShashiControllerAPI.csproj",
         "projectName": "ShashiControllerAPI",
-        "projectPath": "C:\\Project1\\ShashiControllerAPI\\ShashiControllerAPI.csproj",
-        "packagesPath": "C:\\Users\\Shashidhar Gunthala\\.nuget\\packages\\",
-        "outputPath": "C:\\Project1\\ShashiControllerAPI\\obj\\",
+        "projectPath": "/Users/shashi/Desktop/Desktop/Dotnet/ShashiControllerAPI/ShashiControllerAPI.csproj",
+        "packagesPath": "/Users/shashi/.nuget/packages/",
+        "outputPath": "/Users/shashi/Desktop/Desktop/Dotnet/ShashiControllerAPI/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Shashidhar Gunthala\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "/Users/shashi/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
@@ -46,29 +46,31 @@
           "dependencies": {
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
-              "version": "[10.0.3, )"
+              "version": "[9.0.0, )"
             },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
-              "version": "[10.0.3, )"
+              "version": "[9.0.0, )"
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[10.0.3, )"
+              "version": "[9.0.0, )"
             },
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[10.0.3, )"
+              "version": "[9.0.0, )"
             },
-            "Microsoft.EntityFrameworkCore.SqlServer": {
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
               "target": "Package",
-              "version": "[10.0.3, )"
+              "version": "[9.0.0, )"
             },
-            "Microsoft.EntityFrameworkCore.Sqlite": {
+            "Pomelo.EntityFrameworkCore.MySql": {
               "target": "Package",
-              "version": "[10.0.3, )"
+              "version": "[9.0.0, )"
             },
             "Scalar.AspNetCore": {
               "target": "Package",
@@ -98,7 +100,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.103/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.103/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.AspNetCore": "(,10.0.32767]",
             "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",

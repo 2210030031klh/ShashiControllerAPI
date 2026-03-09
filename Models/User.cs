@@ -29,4 +29,8 @@ public class User
     public List<Category> Categories { get; set; } = new();
 
     public List<Expense> Expenses { get; set; } = new();
+    public string Role { get; set; } = "User";
+
+    public string? RefreshToken { get; set; }
+    public DateTime? RefreshTokenExpiryTime { get; set; }
 }

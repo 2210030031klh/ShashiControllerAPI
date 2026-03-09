@@ -2,7 +2,7 @@ namespace ShashiControllerAPI.Models;
 
 public class Category
 {
-    public Guid CategoryId { get; set; }//PK
+    public int CategoryId { get; set; }//PK
 
     public required string CategoryName { get; set; }
 

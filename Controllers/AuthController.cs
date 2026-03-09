@@ -1,11 +1,6 @@
-using Azure.Core;
 using Microsoft.AspNetCore.Mvc;
 using ShashiControllerAPI.DTOs;
-using Microsoft.AspNetCore.Identity;
-using System.Security.Claims;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using System.IdentityModel.Tokens.Jwt;
+using ShashiControllerAPI.Models;
 using ShashiControllerAPI.Service;
 using Microsoft.AspNetCore.Authorization;
 
