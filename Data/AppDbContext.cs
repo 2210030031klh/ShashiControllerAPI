@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using ShashiControllerAPI.Entities;
+
 using ShashiControllerAPI.Models;
 
 namespace ShashiControllerAPI.Data;
@@ -7,5 +7,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 {
     public DbSet<Expense> Expenses => Set<Expense>();
     public DbSet<User> Users { get; set; }
+    
+    public DbSet<Category> Categories { get; set; }
     
 }

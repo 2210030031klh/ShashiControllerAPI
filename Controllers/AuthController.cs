@@ -1,6 +1,5 @@
 using Azure.Core;
 using Microsoft.AspNetCore.Mvc;
-using ShashiControllerAPI.Entities;
 using ShashiControllerAPI.DTOs;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
@@ -30,13 +29,15 @@ public class AuthController(IAuthService authService) : ControllerBase
 
 
     [HttpPost("login")]
-    public ActionResult<String> Login(UserDto Request)
+    public async Task<ActionResult<TokenResponseDto>> Login(UserDto Request)
     {
-        var token=authService.LoginAsync(Request);
-        if(token is null) 
+        var result=await authService.LoginAsync(Request);
+        if(result is null) 
             return BadRequest("Invalid username or password.");
-        return Ok(token);
+        return Ok(result);
     }
+
+
     [Authorize]
     [HttpGet]
     public IActionResult AuthenticatedOnlyEndpoint()
@@ -45,8 +46,23 @@ public class AuthController(IAuthService authService) : ControllerBase
         
     }
 
-    //written in authservice
-
+    [Authorize(Roles = "Admin")]
+    [HttpGet("Admin-Only")]
+    public IActionResult AdminOnlyEndpoint()
+    {
+        return Ok("You are an admin!");
+    }
+    
+    [HttpPost("refresh-token")]
+    public async Task<ActionResult<TokenResponseDto>> RefreshToken(RefreshTokenRequestDto request)
+    {
+        var result = await authService.RefreshTokenAsync(request);
+        if (result is null || result.AccessToken == null || result.RefreshToken == null)
+        {
+            return Unauthorized("Invalid refresh token.")   ;
+        }
+        return Ok(result);
+    }
 
     // private string CreateToken(User user)
     // {

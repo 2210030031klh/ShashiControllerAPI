@@ -8,31 +8,43 @@ using ShashiControllerAPI.DTOs;
 using ShashiControllerAPI.Entities;
 using Microsoft.EntityFrameworkCore;
 using ShashiControllerAPI.Models;
+using System.Security.Cryptography;
 
 namespace ShashiControllerAPI.Service;
 
 public class AuthService(AppDbContext context,IConfiguration configuration) : IAuthService
 {
-    public async Task<String?> LoginAsync(UserDto request)
+    public async Task<TokenResponseDto?> LoginAsync(UserDto request)
     {
         // Implementation for login logic
         var user = await context.Users
         .FirstOrDefaultAsync(u => u.Username == request.Username);
-        if(user == null)
+        if (user == null)
         {
             return null; // User not found
         }
-        if(user.Username!= request.Username)
+        // if (user.Username != request.Username)
+        // {
+        //     return null;
+        // }
+        if (new PasswordHasher<User>().VerifyHashedPassword(user, user.PasswordHash, request.Password) == PasswordVerificationResult.Failed)
         {
             return null;
         }
-        if(new PasswordHasher<User>().VerifyHashedPassword(user, user.PasswordHash, request.Password) == PasswordVerificationResult.Failed)
-        {
-            return null;
-        }
-        
-        return CreateToken(user);
+
+
+        return await CreateTokenResponse(user);
     }
+
+    private async Task<TokenResponseDto> CreateTokenResponse(User user)
+    {
+        return new TokenResponseDto
+        {
+            AccessToken = CreateToken(user),
+            RefreshToken = await GenerateAndSaveRefreshTokenAsync(user)
+        };
+    }
+
     public async Task<User?> RegisterAsync(UserDto request)
     {
         if(await context.Users.AnyAsync(u => u.Username == request.Username))
@@ -50,6 +62,32 @@ public class AuthService(AppDbContext context,IConfiguration configuration) : IA
         await context.SaveChangesAsync();
         return user;
     }
+    private string GenerateRefreshToken()
+    {
+        var randomNumber = new byte[32];
+        using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(randomNumber);
+            return Convert.ToBase64String(randomNumber);
+        
+    }
+    private async Task<User?> ValidateRefreshTokenAsync(Guid userId, string refreshToken)
+    {
+        var user = await context.Users.FindAsync(userId);
+        if(user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
+        {
+            return null; // Invalid refresh token
+        }
+        return user;
+    }  
+
+    private async Task<string> GenerateAndSaveRefreshTokenAsync(User user)
+    {
+        var refreshToken = GenerateRefreshToken();
+        user.RefreshToken = refreshToken; 
+        user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7); // Set expiry time (e.g., 24 hours)
+        await context.SaveChangesAsync();
+        return refreshToken;
+    }   
 
     private string CreateToken(User user)
     {
@@ -57,7 +95,8 @@ public class AuthService(AppDbContext context,IConfiguration configuration) : IA
         var claims= new List<Claim>
         {
             new Claim(ClaimTypes.Name,user.Username),
-            new Claim(ClaimTypes.NameIdentifier,user.Id.ToString())
+            new Claim(ClaimTypes.NameIdentifier,user.Id.ToString()),
+            new Claim(ClaimTypes.Role,user.Role)
         };
         var key = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(configuration.GetValue<string>("AppSettings:Token")!));
@@ -75,4 +114,20 @@ public class AuthService(AppDbContext context,IConfiguration configuration) : IA
         
     }
 
+    public async Task<TokenResponseDto?> RefreshTokenAsync(RefreshTokenRequestDto request)
+    {
+        var user = await ValidateRefreshTokenAsync(request.UserId, request.RefreshToken);
+        if(user is null)
+        {
+            return null; // Invalid refresh token
+        }
+
+        // var response = new TokenResponseDto
+        // {
+        //     AccessToken = CreateToken(user),
+        //     RefreshToken = await GenerateAndSaveRefreshTokenAsync(user)
+        // };
+
+        return await CreateTokenResponse(user);
+    }
 }

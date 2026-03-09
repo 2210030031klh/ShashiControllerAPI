@@ -3541,19 +3541,19 @@
     ]
   },
   "packageFolders": {
-    "/Users/shashi/.nuget/packages/": {}
+    "C:\\Users\\Shashidhar Gunthala\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/shashi/Desktop/Desktop/ShashiControllerAPI/ShashiControllerAPI.csproj",
+      "projectUniqueName": "C:\\Project1\\ShashiControllerAPI\\ShashiControllerAPI.csproj",
       "projectName": "ShashiControllerAPI",
-      "projectPath": "/Users/shashi/Desktop/Desktop/ShashiControllerAPI/ShashiControllerAPI.csproj",
-      "packagesPath": "/Users/shashi/.nuget/packages/",
-      "outputPath": "/Users/shashi/Desktop/Desktop/ShashiControllerAPI/obj/",
+      "projectPath": "C:\\Project1\\ShashiControllerAPI\\ShashiControllerAPI.csproj",
+      "packagesPath": "C:\\Users\\Shashidhar Gunthala\\.nuget\\packages\\",
+      "outputPath": "C:\\Project1\\ShashiControllerAPI\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/shashi/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\Shashidhar Gunthala\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net10.0"
@@ -3637,7 +3637,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.103/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.103/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.AspNetCore": "(,10.0.32767]",
           "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",
