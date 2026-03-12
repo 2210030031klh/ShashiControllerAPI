@@ -1,34 +1,30 @@
-// namespace ShashiControllerAPI.Models;
-// public class Expense
-// {
-//     public int Id { get; set; }
-//     public required string Name {   get; set; }
-//     public int Amount { get; set; }
-//     public DateOnly Date { get; set; }
-//     public required string Category { get; set; }
-//     public string? Description { get; set; }
-    
+using System.ComponentModel.DataAnnotations;
 
-// }
 namespace ShashiControllerAPI.Models;
 
 public class Expense
 {
-    public Guid ExpenseId { get; set; }//PK
+    public Guid ExpenseId { get; set; }                  // PK
 
-    public Guid UserId { get; set; }//FK
+    public Guid UserId { get; set; }                     // FK → Users.UserId
 
-    public int CategoryId { get; set; }//FK
+    public int CategoryId { get; set; }                  // FK → Categories.CategoryId
 
-    public int Amount { get; set; }
+    [MaxLength(100)]                                      // VARCHAR(100) in MySQL
+    public string Name { get; set; } = string.Empty;    // expense name e.g. "Lunch", "Uber"
 
-    public string? Description { get; set; }
+    public int Amount { get; set; }                      // how much was spent
 
-    public DateOnly Date { get; set; }
+    [MaxLength(200)]                                      // VARCHAR(200) in MySQL
+    public string? Description { get; set; }             // optional notes
 
-    public DateOnly CreatedAt { get; set; } = DateOnly.FromDateTime(DateTime.UtcNow);
-//Navigation properties
-    public User User { get; set; } = null!;
+    public DateOnly Date { get; set; }                   // when expense happened
+    public DateOnly CreatedAt { get; set; } = DateOnly.FromDateTime(DateTime.UtcNow); // auto set
 
-    public Category Category { get; set; } = null!;
+    // Navigation Properties:
+    public Category Category { get; set; } = null!;     // used to get CategoryName
+
+    // Relationships:
+    // Expense (Many) → User (1)
+    // Expense (Many) → Category (1)
 }

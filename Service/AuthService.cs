@@ -30,8 +30,6 @@ public class AuthService(AppDbContext context,IConfiguration configuration) : IA
         {
             return null;
         }
-
-
         return await CreateTokenResponse(user);
     }
 
@@ -44,7 +42,7 @@ public class AuthService(AppDbContext context,IConfiguration configuration) : IA
         };
     }
 
-    public async Task<User?> RegisterAsync(UserDto request)
+    public async Task<RegisterResponseDto?> RegisterAsync(UserDto request)
     {
         if (await context.Users.AnyAsync(u => u.Username == request.Username))
             return null;
@@ -60,7 +58,16 @@ public class AuthService(AppDbContext context,IConfiguration configuration) : IA
         user.PasswordHash = new PasswordHasher<User>().HashPassword(user, request.Password);
         context.Users.Add(user);
         await context.SaveChangesAsync();
-        return user;
+        // return user;
+            return new RegisterResponseDto
+        {
+            UserId = user.UserId,
+            Username = user.Username,
+            Email = user.Email,
+            Role = user.Role,
+            CreatedAt = user.CreatedAt
+        };
+
     }
     private string GenerateRefreshToken()
     {

@@ -6,14 +6,16 @@ using ShashiControllerAPI.Models;
 
 public class ExpenseService (AppDbContext context): IExpenseService
 {
-
-    public async Task<List<GetExpenseDto>> GetAllExpensesAsync()
+    //check if which user is logged in and then return the expenses of that user only
+    public async Task<List<GetExpenseDto>> GetAllExpensesAsync(Guid userId)
     => await context.Expenses
     .Include(e => e.Category)
         .Select(e => new GetExpenseDto
             {
                 ExpenseId = e.ExpenseId,
+
                 UserId = e.UserId,
+                Name= e.Name,
                 CategoryName = e.Category.CategoryName,
                 Amount = e.Amount,
                 Description = e.Description,
@@ -32,6 +34,7 @@ public class ExpenseService (AppDbContext context): IExpenseService
             {
                 ExpenseId = e.ExpenseId,
                 UserId = e.UserId,
+                Name = e.Name,
                 CategoryName = e.Category.CategoryName,
                 Amount = e.Amount,
                 Description = e.Description,
@@ -53,6 +56,7 @@ public class ExpenseService (AppDbContext context): IExpenseService
         var newExpense = new Expense
         {
             UserId = UserId,
+            Name= expense.Name,
             CategoryId = expense.CategoryId,
             Amount = expense.Amount,
             Description = expense.Description,
@@ -66,6 +70,7 @@ public class ExpenseService (AppDbContext context): IExpenseService
         {
             // UserId = newExpense.UserId,
             CategoryId = newExpense.CategoryId,
+            Name = newExpense.Name,
             Amount = newExpense.Amount,
             Description = newExpense.Description,
             Date = newExpense.Date
@@ -79,6 +84,7 @@ public class ExpenseService (AppDbContext context): IExpenseService
             return false;
 
         existing.CategoryId = expense.CategoryId;
+        existing.Name = expense.Name;
         existing.Amount = expense.Amount;
         existing.Description = expense.Description;
         existing.Date = expense.Date;
@@ -99,16 +105,17 @@ public class ExpenseService (AppDbContext context): IExpenseService
         return true;
     }
 
-    public async Task<GetExpenseDto?> GetExpensesByIdAsync(Guid id, Guid userId)
+    public async Task<GetExpenseDto?> GetExpensesByIdAsync(Guid id)
     {
         
         var result = await context.Expenses
             .Include(e => e.Category)
-            .Where(e => e.ExpenseId == id && e.UserId == userId)
+            .Where(e => e.ExpenseId == id )
             .Select(e => new GetExpenseDto
             {
                 ExpenseId = e.ExpenseId,
                 UserId = e.UserId,
+                Name = e.Name,
                 CategoryName = e.Category.CategoryName,
                 Amount = e.Amount,
                 Description = e.Description,
@@ -130,6 +137,7 @@ public async Task<List<GetExpenseDto>> GetExpensesByDateRangeAsync(Guid userId, 
         {
             ExpenseId = e.ExpenseId,
             UserId = e.UserId,
+            Name = e.Name,
             CategoryName = e.Category.CategoryName,
             Amount = e.Amount,
             Description = e.Description,
@@ -182,6 +190,7 @@ public async Task<List<GetExpenseDto>> GetExpensesByDateRangeAsync(Guid userId, 
         {
             ExpenseId = e.ExpenseId,
             UserId = e.UserId,
+            Name = e.Name,
             CategoryName = e.Category.CategoryName,
             Amount = e.Amount,
             Description = e.Description,

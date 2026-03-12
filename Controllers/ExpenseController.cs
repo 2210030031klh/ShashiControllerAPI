@@ -14,14 +14,19 @@ public class ExpenseController (IExpenseService expenseService): ControllerBase
 {
     // 1️⃣ Get all expenses
     [HttpGet]
+    [Authorize]
     public async Task<ActionResult<List<GetExpenseDto>>> GetAllExpenses()
-    => Ok(await expenseService.GetAllExpensesAsync());
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        return Ok(await expenseService.GetAllExpensesAsync(userId));
+    }
+
 
     // 2️⃣ Get expense by ID
     [HttpGet("{id}")]
-    public async Task<ActionResult<GetExpenseDto>> GetExpensesById(Guid id, Guid userId)
+    public async Task<ActionResult<GetExpenseDto>> GetExpensesById(Guid id)
     {
-        var result = await expenseService.GetExpensesByIdAsync(id, userId);
+        var result = await expenseService.GetExpensesByIdAsync(id);
         return result is null ? NotFound("The expense with the specified ID was not found.") : Ok(result);      
         // if (result == null )
         //     return NotFound("The expense with the specified ID was not found.");
@@ -38,6 +43,7 @@ public class ExpenseController (IExpenseService expenseService): ControllerBase
 
     // 4️⃣ Add a new expense
     [HttpPost]
+    [Authorize]
     public async Task<ActionResult<Expense>> AddExpense(CreateExpenseDto expense)
     {
         // var added = await expenseService.AddExpenseAsync(expense); 
@@ -103,13 +109,13 @@ public class ExpenseController (IExpenseService expenseService): ControllerBase
         return result.Count is 0 ? NotFound("No data found.") : Ok(result);
     }
 
-  [HttpGet("all")]
-[Authorize(Roles = "Accountant")]
-public async Task<ActionResult<List<GetExpenseDto>>> GetAllUsersExpenses()
-{
-    var result = await expenseService.GetAllUsersExpensesAsync();
-    return result.Count is 0 ? NotFound("No expenses found.") : Ok(result);
-}
+    [HttpGet("all")]
+    [Authorize(Roles = "Accountant")]
+    public async Task<ActionResult<List<GetExpenseDto>>> GetAllUsersExpenses()
+    {
+        var result = await expenseService.GetAllUsersExpensesAsync();
+        return result.Count is 0 ? NotFound("No expenses found.") : Ok(result);
+    }
 
 
 }

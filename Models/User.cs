@@ -1,36 +1,32 @@
-// namespace ShashiControllerAPI.Entities;
-// public class User
-// {
-//     public Guid Id{ get; set; } 
-//     public string Username { get; set; } = string.Empty;
-//     public string PasswordHash { get; set; } = string.Empty;
-
-//     public string Role { get; set; } = string.Empty;
-
-//     public string? RefreshToken { get; set; }
-//     public DateTime? RefreshTokenExpiryTime { get; set; }
-// }
-
+using System.ComponentModel.DataAnnotations;
 
 namespace ShashiControllerAPI.Models;
 
 public class User
 {
-    public Guid UserId { get; set; }//PK
+    public Guid UserId { get; set; }                    // PK
 
-    public required string Username { get; set; }
+    [MaxLength(50)]                                      // VARCHAR(50) in MySQL
+    public required string Username { get; set; }        // login name
 
-    public required string Email { get; set; }
+    [MaxLength(100)]                                     // VARCHAR(100) in MySQL
+    public required string Email { get; set; }           // email address
 
-    public required string PasswordHash { get; set; }
+    [MaxLength(255)]                                     // VARCHAR(255) in MySQL
+    public required string PasswordHash { get; set; }    // encrypted password
 
-    public DateOnly CreatedAt { get; set; } = DateOnly.FromDateTime(DateTime.UtcNow);
-    //Relationships 1 to M
-    public List<Category> Categories { get; set; } = new();
+    [MaxLength(20)]                                      // VARCHAR(20) in MySQL
+    public string Role { get; set; } = "User";           // "User" or "Accountant"
 
-    public List<Expense> Expenses { get; set; } = new();
-    public string Role { get; set; } = "User";
+    [MaxLength(255)]                                     // VARCHAR(255) in MySQL
+    public string? RefreshToken { get; set; }            // JWT refresh token
 
-    public string? RefreshToken { get; set; }
-    public DateTime? RefreshTokenExpiryTime { get; set; }
+    public DateTime? RefreshTokenExpiryTime { get; set; } // refresh token expiry
+    public DateOnly CreatedAt { get; set; } = DateOnly.FromDateTime(DateTime.UtcNow); // auto set
+
+    // Relationships:
+    // User (1) → Expenses (Many)
+    // User (1) → Incomes (Many)
+    // User (1) → Budgets (Many)
+    // User (1) → Categories (Many) personal only
 }

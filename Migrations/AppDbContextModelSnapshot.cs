@@ -22,6 +22,39 @@ namespace ShashiControllerAPI.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
+            modelBuilder.Entity("ShashiControllerAPI.Models.Budget", b =>
+                {
+                    b.Property<Guid>("BudgetId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("Amount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<DateOnly>("CreatedAt")
+                        .HasColumnType("date");
+
+                    b.Property<int>("Month")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("int");
+
+                    b.HasKey("BudgetId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Budgets");
+                });
+
             modelBuilder.Entity("ShashiControllerAPI.Models.Category", b =>
                 {
                     b.Property<int>("CategoryId")
@@ -32,14 +65,13 @@ namespace ShashiControllerAPI.Migrations
 
                     b.Property<string>("CategoryName")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<Guid?>("UserId")
                         .HasColumnType("char(36)");
 
                     b.HasKey("CategoryId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Categories");
 
@@ -100,7 +132,13 @@ namespace ShashiControllerAPI.Migrations
                         .HasColumnType("date");
 
                     b.Property<string>("Description")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("char(36)");
@@ -109,9 +147,41 @@ namespace ShashiControllerAPI.Migrations
 
                     b.HasIndex("CategoryId");
 
+                    b.ToTable("Expenses");
+                });
+
+            modelBuilder.Entity("ShashiControllerAPI.Models.Income", b =>
+                {
+                    b.Property<Guid>("IncomeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("Amount")
+                        .HasColumnType("int");
+
+                    b.Property<DateOnly>("CreatedAt")
+                        .HasColumnType("date");
+
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("Source")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("IncomeId");
+
                     b.HasIndex("UserId");
 
-                    b.ToTable("Expenses");
+                    b.ToTable("Incomes");
                 });
 
             modelBuilder.Entity("ShashiControllerAPI.Models.User", b =>
@@ -125,50 +195,46 @@ namespace ShashiControllerAPI.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("RefreshToken")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.Property<DateTime?>("RefreshTokenExpiryTime")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Role")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("UserId");
 
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("ShashiControllerAPI.Models.Category", b =>
-                {
-                    b.HasOne("ShashiControllerAPI.Models.User", "User")
-                        .WithMany("Categories")
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("ShashiControllerAPI.Models.Expense", b =>
+            modelBuilder.Entity("ShashiControllerAPI.Models.Budget", b =>
                 {
                     b.HasOne("ShashiControllerAPI.Models.Category", "Category")
-                        .WithMany("Expenses")
+                        .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("ShashiControllerAPI.Models.User", "User")
-                        .WithMany("Expenses")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -178,16 +244,26 @@ namespace ShashiControllerAPI.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ShashiControllerAPI.Models.Category", b =>
+            modelBuilder.Entity("ShashiControllerAPI.Models.Expense", b =>
                 {
-                    b.Navigation("Expenses");
+                    b.HasOne("ShashiControllerAPI.Models.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("ShashiControllerAPI.Models.User", b =>
+            modelBuilder.Entity("ShashiControllerAPI.Models.Income", b =>
                 {
-                    b.Navigation("Categories");
+                    b.HasOne("ShashiControllerAPI.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("Expenses");
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

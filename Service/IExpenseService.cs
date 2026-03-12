@@ -5,9 +5,9 @@ namespace ShashiControllerAPI.Service;
 
 public interface IExpenseService
 {
-    Task<List<GetExpenseDto>> GetAllExpensesAsync();
+    Task<List<GetExpenseDto>> GetAllExpensesAsync(Guid userId);
 
-    Task<GetExpenseDto?> GetExpensesByIdAsync(Guid id, Guid userId);
+    Task<GetExpenseDto?> GetExpensesByIdAsync(Guid id);
 
     Task<List<GetExpenseDto>> GetExpensesByCategoryAsync(string category);
 

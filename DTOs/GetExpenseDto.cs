@@ -20,6 +20,8 @@ public class GetExpenseDto
 {
     public Guid ExpenseId { get; set; }
     public Guid UserId { get; set; }
+
+    public string Name { get; set; } = string.Empty;
     public string CategoryName { get; set; } = string.Empty;
     public int Amount { get; set; }
     public string? Description { get; set; }
