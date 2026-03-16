@@ -13,39 +13,15 @@ namespace ShashiControllerAPI.Service;
 
 public class AuthService(AppDbContext context,IConfiguration configuration) : IAuthService
 {
-    public async Task<TokenResponseDto?> LoginAsync(UserDto request)
-    {
-        // Implementation for login logic
-        var user = await context.Users
-        .FirstOrDefaultAsync(u => u.Username == request.Username);
-        if (user == null)
-        {
-            return null; // User not found
-        }
-        // if (user.Username != request.Username)
-        // {
-        //     return null;
-        // }
-        if (new PasswordHasher<User>().VerifyHashedPassword(user, user.PasswordHash, request.Password) == PasswordVerificationResult.Failed)
-        {
-            return null;
-        }
-        return await CreateTokenResponse(user);
-    }
-
-    private async Task<TokenResponseDto> CreateTokenResponse(User user)
-    {
-        return new TokenResponseDto
-        {
-            AccessToken = CreateToken(user),
-            RefreshToken = await GenerateAndSaveRefreshTokenAsync(user)
-        };
-    }
-
     public async Task<RegisterResponseDto?> RegisterAsync(UserDto request)
     {
-        if (await context.Users.AnyAsync(u => u.Username == request.Username))
-            return null;
+    // Check username
+    if (await context.Users.AnyAsync(u => u.Username == request.Username))
+        throw new Exception($"Username '{request.Username}' is already taken.");
+
+    // Check email
+    if (await context.Users.AnyAsync(u => u.Email == request.Email))
+        throw new Exception($"Email '{request.Email}' is already in use.");
 
         var user = new User
         {
@@ -69,6 +45,36 @@ public class AuthService(AppDbContext context,IConfiguration configuration) : IA
         };
 
     }
+    public async Task<TokenResponseDto?> LoginAsync(LoginDto request)
+    {
+        // Implementation for login logic
+        var user = await context.Users
+        .FirstOrDefaultAsync(u => u.Username == request.Username);
+        if (user == null)
+        {
+             throw new Exception("Invalid username"); // User not found
+        }
+        // if (user.Username != request.Username)
+        // {
+        //     return null;
+        // }
+        if (new PasswordHasher<User>().VerifyHashedPassword(user, user.PasswordHash, request.Password) == PasswordVerificationResult.Failed)
+        {
+            // return null;
+            throw new Exception("Invalid password.");
+        }
+        return await CreateTokenResponse(user);
+    }
+
+    private async Task<TokenResponseDto> CreateTokenResponse(User user)
+    {
+        return new TokenResponseDto
+        {
+            AccessToken = CreateToken(user),
+            RefreshToken = await GenerateAndSaveRefreshTokenAsync(user)
+        };
+    }
+
     private string GenerateRefreshToken()
     {
         var randomNumber = new byte[32];
@@ -79,6 +85,7 @@ public class AuthService(AppDbContext context,IConfiguration configuration) : IA
     }
     private async Task<User?> ValidateRefreshTokenAsync(Guid userId, string refreshToken)
     {
+        
         var user = await context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
         if(user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
         {

@@ -14,7 +14,7 @@ public class ExpenseController (IExpenseService expenseService): ControllerBase
 {
     // 1️⃣ Get all expenses
     [HttpGet]
-    [Authorize]
+    // [Authorize]
     public async Task<ActionResult<List<GetExpenseDto>>> GetAllExpenses()
     {
         var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
@@ -26,24 +26,23 @@ public class ExpenseController (IExpenseService expenseService): ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<GetExpenseDto>> GetExpensesById(Guid id)
     {
-        var result = await expenseService.GetExpensesByIdAsync(id);
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        //handle it.
+        var result = await expenseService.GetExpensesByIdAsync(id, userId);
         return result is null ? NotFound("The expense with the specified ID was not found.") : Ok(result);      
-        // if (result == null )
-        //     return NotFound("The expense with the specified ID was not found.");
-
-        // return Ok(result);
     }
      // 3️⃣ Get expenses by category
     [HttpGet("category/{category}")]
     public async Task<ActionResult<IEnumerable<GetExpenseDto>>> GetExpensesByCategory(string category)
     {
-        var result = await expenseService.GetExpensesByCategoryAsync(category);
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var result = await expenseService.GetExpensesByCategoryAsync(category, userId);
         return result.Count is 0 ? NotFound($"No expenses found for category '{category}'.") : Ok(result);
     }
 
     // 4️⃣ Add a new expense
     [HttpPost]
-    [Authorize]
+    // [Authorize]
     public async Task<ActionResult<Expense>> AddExpense(CreateExpenseDto expense)
     {
         // var added = await expenseService.AddExpenseAsync(expense); 
@@ -65,7 +64,8 @@ public class ExpenseController (IExpenseService expenseService): ControllerBase
     [HttpPut("{id}")]
     public async Task<ActionResult> UpdateExpenseAsync(Guid id,  UpdateExpenseDto expense)
     {
-        var updated = await expenseService.UpdateExpenseAsync(id, expense);
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var updated = await expenseService.UpdateExpenseAsync(id, expense, userId);
         return updated ? NoContent() : NotFound($"Expense with ID {id} not found.");
     }
 
@@ -73,12 +73,13 @@ public class ExpenseController (IExpenseService expenseService): ControllerBase
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteExpenseAsync(Guid id)
     {
-        var deleted = await expenseService.DeleteExpenseAsync(id);
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var deleted = await expenseService.DeleteExpenseAsync(id, userId);
         return deleted ? NoContent() : NotFound($"Expense with ID {id} not found.");
     }
 
     [HttpGet("ByDateRange")]
-    [Authorize]
+    // [Authorize]
     public async Task<ActionResult<List<GetExpenseDto>>> GetExpensesByDateRange
     (
         [FromQuery] DateOnly startDate, 
@@ -92,7 +93,7 @@ public class ExpenseController (IExpenseService expenseService): ControllerBase
         return result.Count is 0 ? NotFound("No expenses found for this date range.") : Ok(result);
     }
     [HttpGet("report/monthly")]
-    [Authorize]
+    // [Authorize]
     public async Task<ActionResult<List<MonthlyReportDto>>> GetMonthlyReport()
     {
         var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
@@ -101,7 +102,7 @@ public class ExpenseController (IExpenseService expenseService): ControllerBase
     }
 
     [HttpGet("report/category")]
-    [Authorize]
+    // [Authorize]
     public async Task<ActionResult<List<CategoryReportDto>>> GetCategoryReport()
     {
         var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);

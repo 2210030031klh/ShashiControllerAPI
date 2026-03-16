@@ -8,7 +8,7 @@ namespace ShashiControllerAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-[Authorize]
+// [Authorize]
 public class IncomeController(IIncomeService incomeService) : ControllerBase
 {
     // GET all incomes for logged in user
@@ -24,7 +24,8 @@ public class IncomeController(IIncomeService incomeService) : ControllerBase
     [HttpGet("{incomeId}")]
     public async Task<ActionResult<GetIncomeDto>> GetIncomeById(Guid incomeId)
     {
-        var result = await incomeService.GetIncomeByIdAsync(incomeId);
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var result = await incomeService.GetIncomeByIdAsync(incomeId, userId);
         return result is null ? NotFound("Income not found.") : Ok(result);
     }
 
@@ -50,7 +51,8 @@ public class IncomeController(IIncomeService incomeService) : ControllerBase
     [HttpPut("{id}")]
     public async Task<ActionResult> UpdateIncome(Guid id, UpdateIncomeDto income)
     {
-        var updated = await incomeService.UpdateIncomeAsync(id, income);
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var updated = await incomeService.UpdateIncomeAsync(id, income, userId);
         return updated ? NoContent() : NotFound($"Income with ID {id} not found.");
     }
 
@@ -58,7 +60,8 @@ public class IncomeController(IIncomeService incomeService) : ControllerBase
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteIncome(Guid id)
     {
-        var deleted = await incomeService.DeleteIncomeAsync(id);
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var deleted = await incomeService.DeleteIncomeAsync(id, userId);
         return deleted ? NoContent() : NotFound($"Income with ID {id} not found.");
     }
 }

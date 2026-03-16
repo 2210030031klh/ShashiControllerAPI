@@ -3,19 +3,23 @@
 GET {{ShashiControllerAPI_HostAddress}}/weatherforecast/
 Accept: application/json
 ###
-GET {{ShashiControllerAPI_HostAddress}}/expense/
+GET {{ShashiControllerAPI_HostAddress}}/api/Expense/
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiTmFuaSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiMDhkZTgzMjEtNWU1MS00YTMxLThjNzctOGZmNGRiMTRjZDgyIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiVXNlciIsImV4cCI6MTc3MzczMjI0MSwiaXNzIjoiU2hhc2hpQ29udHJvbGxlckFQSSIsImF1ZCI6IiBTaGFzaGlDb250cm9sbGVyQVBJQ2xpZW50In0.b4unm_4NjXelQLd5yqdff2AjY5nlKHoS2hwGRH0YhAzyY3ak4oJgfvsGM0sP8P_2PuOqJaZ4kPs1LKSJ_XC7YQ
 Accept: application/json
 
 ###
-GET {{ShashiControllerAPI_HostAddress}}/expense/1
+GET {{ShashiControllerAPI_HostAddress}}/api/Expense/1
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiTmFuaSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiMDhkZTgzMjEtNWU1MS00YTMxLThjNzctOGZmNGRiMTRjZDgyIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiVXNlciIsImV4cCI6MTc3MzczMjI0MSwiaXNzIjoiU2hhc2hpQ29udHJvbGxlckFQSSIsImF1ZCI6IiBTaGFzaGlDb250cm9sbGVyQVBJQ2xpZW50In0.b4unm_4NjXelQLd5yqdff2AjY5nlKHoS2hwGRH0YhAzyY3ak4oJgfvsGM0sP8P_2PuOqJaZ4kPs1LKSJ_XC7YQ
 Accept: application/json
 
 ###
-GET {{ShashiControllerAPI_HostAddress}}/expense/category/Food
+GET {{ShashiControllerAPI_HostAddress}}/api/Expense/category/Food
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiTmFuaSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiMDhkZTgzMjEtNWU1MS00YTMxLThjNzctOGZmNGRiMTRjZDgyIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiVXNlciIsImV4cCI6MTc3MzczMjI0MSwiaXNzIjoiU2hhc2hpQ29udHJvbGxlckFQSSIsImF1ZCI6IiBTaGFzaGlDb250cm9sbGVyQVBJQ2xpZW50In0.b4unm_4NjXelQLd5yqdff2AjY5nlKHoS2hwGRH0YhAzyY3ak4oJgfvsGM0sP8P_2PuOqJaZ4kPs1LKSJ_XC7YQ
 Accept: application/json
 
 ###
 POST {{ShashiControllerAPI_HostAddress}}/api/Expense
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiTmFuaSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiMDhkZTgzMjEtNWU1MS00YTMxLThjNzctOGZmNGRiMTRjZDgyIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiVXNlciIsImV4cCI6MTc3MzczMjI0MSwiaXNzIjoiU2hhc2hpQ29udHJvbGxlckFQSSIsImF1ZCI6IiBTaGFzaGlDb250cm9sbGVyQVBJQ2xpZW50In0.b4unm_4NjXelQLd5yqdff2AjY5nlKHoS2hwGRH0YhAzyY3ak4oJgfvsGM0sP8P_2PuOqJaZ4kPs1LKSJ_XC7YQ
 Content-Type: application/json
 
 {
@@ -25,3 +29,37 @@ Content-Type: application/json
   "category": "Food",
   "description": "Lunch at restaurant"
 }
+
+###
+# Login to get token
+POST {{ShashiControllerAPI_HostAddress}}/api/Auth/login
+Content-Type: application/json
+
+{
+  "username": "Nani",
+  "password": "Shashi@123"
+}
+
+###
+# Get all budgets (to find budget ID)
+GET {{ShashiControllerAPI_HostAddress}}/api/Budget
+Authorization: "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiTmFuaSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiMDhkZTgzMjEtNWU1MS00YTMxLThjNzctOGZmNGRiMTRjZDgyIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiVXNlciIsImV4cCI6MTc3MzczMjI0MSwiaXNzIjoiU2hhc2hpQ29udHJvbGxlckFQSSIsImF1ZCI6IiBTaGFzaGlDb250cm9sbGVyQVBJQ2xpZW50In0.b4unm_4NjXelQLd5yqdff2AjY5nlKHoS2hwGRH0YhAzyY3ak4oJgfvsGM0sP8P_2PuOqJaZ4kPs1LKSJ_XC7YQ",
+Accept: application/json
+
+###
+# Update Budget - Replace {id} with actual budget ID from GET response
+PUT {{ShashiControllerAPI_HostAddress}}/api/Budget/{id}
+Authorization: Bearer your-jwt-token-here
+Content-Type: application/json
+
+{
+  "categoryId": 1,
+  "amount": 5000,
+  "month": 3,
+  "year": 2024
+}
+
+###
+# Delete Budget - Replace {id} with actual budget ID from GET response
+DELETE {{ShashiControllerAPI_HostAddress}}/api/Budget/{id}
+Authorization: Bearer your-jwt-token-here

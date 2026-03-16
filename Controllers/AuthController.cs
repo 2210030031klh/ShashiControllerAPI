@@ -12,7 +12,6 @@ public class AuthController(IAuthService authService) : ControllerBase
 {
     // public static User user =new();
     [HttpPost("register")]
-
     public async Task<ActionResult <User>> Register(UserDto Request)
     {
         var user=await authService.RegisterAsync(Request);
@@ -24,7 +23,7 @@ public class AuthController(IAuthService authService) : ControllerBase
 
 
     [HttpPost("login")]
-    public async Task<ActionResult<TokenResponseDto>> Login(UserDto Request)
+    public async Task<ActionResult<TokenResponseDto>> Login(LoginDto Request)
     {
         var result=await authService.LoginAsync(Request);
         if(result is null) 
@@ -33,7 +32,7 @@ public class AuthController(IAuthService authService) : ControllerBase
     }
 
 
-    [Authorize]
+    // [Authorize]
     [HttpGet]
     public IActionResult AuthenticatedOnlyEndpoint()
     {
@@ -41,7 +40,7 @@ public class AuthController(IAuthService authService) : ControllerBase
         
     }
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Accountant")]
     [HttpGet("Admin-Only")]
     public IActionResult AdminOnlyEndpoint()
     {

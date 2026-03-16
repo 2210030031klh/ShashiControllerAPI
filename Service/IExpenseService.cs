@@ -7,15 +7,15 @@ public interface IExpenseService
 {
     Task<List<GetExpenseDto>> GetAllExpensesAsync(Guid userId);
 
-    Task<GetExpenseDto?> GetExpensesByIdAsync(Guid id);
+    Task<GetExpenseDto?> GetExpensesByIdAsync(Guid id, Guid userId);
 
-    Task<List<GetExpenseDto>> GetExpensesByCategoryAsync(string category);
+    Task<List<GetExpenseDto>> GetExpensesByCategoryAsync(string category, Guid userId);
 
     Task<CreateExpenseDto> AddExpenseAsync(CreateExpenseDto expense, Guid userId);
 
-    Task<bool> UpdateExpenseAsync(Guid id, UpdateExpenseDto  expense);
+    Task<bool> UpdateExpenseAsync(Guid id, UpdateExpenseDto  expense, Guid userId);
 
-    Task<bool> DeleteExpenseAsync(Guid id);
+    Task<bool> DeleteExpenseAsync(Guid id, Guid userId);
 
     Task<List<GetExpenseDto>> GetExpensesByDateRangeAsync(Guid userId, DateOnly startDate, DateOnly endDate);
 

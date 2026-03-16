@@ -9,7 +9,8 @@ public class ExpenseService (AppDbContext context): IExpenseService
     //check if which user is logged in and then return the expenses of that user only
     public async Task<List<GetExpenseDto>> GetAllExpensesAsync(Guid userId)
     => await context.Expenses
-    .Include(e => e.Category)
+        .Where(e => e.UserId == userId)
+        .Include(e => e.Category)
         .Select(e => new GetExpenseDto
             {
                 ExpenseId = e.ExpenseId,
@@ -24,12 +25,12 @@ public class ExpenseService (AppDbContext context): IExpenseService
             }).ToListAsync();
 
     
-
-    public async Task<List<GetExpenseDto>> GetExpensesByCategoryAsync(string category)
+    //didnt use userid , need to use it to filter the expenses of that user only
+    public async Task<List<GetExpenseDto>> GetExpensesByCategoryAsync(string category, Guid userId)
     {
         return await context.Expenses
             .Include(e => e.Category)
-            .Where(e => e.Category.CategoryName.ToLower() == category.ToLower())
+            .Where(e => e.UserId == userId && e.Category.CategoryName.ToLower() == category.ToLower())
             .Select(e => new GetExpenseDto
             {
                 ExpenseId = e.ExpenseId,
@@ -46,6 +47,10 @@ public class ExpenseService (AppDbContext context): IExpenseService
 
     public async Task<CreateExpenseDto> AddExpenseAsync(CreateExpenseDto expense, Guid UserId)
     {
+        var userExists = await context.Users.AnyAsync(u => u.UserId == UserId);
+        if (!userExists)
+        throw new ArgumentException("User not found.");
+
         var categoryExists = await context.Categories.AnyAsync(c => c.CategoryId == expense.CategoryId);
         if (!categoryExists)
                 throw new ArgumentException("Category does not exist.");
@@ -77,9 +82,9 @@ public class ExpenseService (AppDbContext context): IExpenseService
         };
     }
 
-    public async Task<bool> UpdateExpenseAsync(Guid  id, UpdateExpenseDto expense)
+    public async Task<bool> UpdateExpenseAsync(Guid  id, UpdateExpenseDto expense, Guid userId)
     {
-        var existing = await context.Expenses.FirstOrDefaultAsync(e => e.ExpenseId == id);
+        var existing = await context.Expenses.FirstOrDefaultAsync(e => e.ExpenseId == id && e.UserId == userId);
         if (existing is null)
             return false;
 
@@ -94,9 +99,9 @@ public class ExpenseService (AppDbContext context): IExpenseService
     }
 
 
-    public async Task<bool> DeleteExpenseAsync(Guid id)
+    public async Task<bool> DeleteExpenseAsync(Guid id, Guid userId )
     {
-        var expense = await context.Expenses.FirstOrDefaultAsync(e => e.ExpenseId == id);
+        var expense = await context.Expenses.FirstOrDefaultAsync(e => e.ExpenseId == id && e.UserId == userId);
         if (expense is null)
             return false;
 
@@ -105,12 +110,12 @@ public class ExpenseService (AppDbContext context): IExpenseService
         return true;
     }
 
-    public async Task<GetExpenseDto?> GetExpensesByIdAsync(Guid id)
+    public async Task<GetExpenseDto?> GetExpensesByIdAsync(Guid id, Guid userId)
     {
         
         var result = await context.Expenses
             .Include(e => e.Category)
-            .Where(e => e.ExpenseId == id )
+            .Where(e => e.ExpenseId == id && e.UserId == userId)
             .Select(e => new GetExpenseDto
             {
                 ExpenseId = e.ExpenseId,

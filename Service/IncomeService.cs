@@ -22,9 +22,9 @@ public class IncomeService(AppDbContext context) : IIncomeService
             })
             .ToListAsync();
 
-    public async Task<GetIncomeDto?> GetIncomeByIdAsync(Guid id)
+    public async Task<GetIncomeDto?> GetIncomeByIdAsync(Guid id, Guid userId)
         => await context.Incomes
-            .Where(i => i.IncomeId == id)
+            .Where(i => i.IncomeId == id&& i.UserId == userId)
             .Select(i => new GetIncomeDto
             {
                 IncomeId = i.IncomeId,
@@ -39,8 +39,13 @@ public class IncomeService(AppDbContext context) : IIncomeService
 
     public async Task<CreateIncomeDto> AddIncomeAsync(CreateIncomeDto income, Guid userId)
     {
+        var userExists = await context.Users.AnyAsync(u => u.UserId == userId);
+        if (!userExists)
+            throw new ArgumentException("User not found.");
+            
         if (income.Amount <= 0)
             throw new ArgumentException("Amount must be greater than 0.");
+                // Check if user exist
 
         var newIncome = new Income
         {
@@ -63,9 +68,9 @@ public class IncomeService(AppDbContext context) : IIncomeService
         };
     }
 
-    public async Task<bool> UpdateIncomeAsync(Guid id, UpdateIncomeDto income)
+    public async Task<bool> UpdateIncomeAsync(Guid id, UpdateIncomeDto income, Guid userId)
     {
-        var existing = await context.Incomes.FirstOrDefaultAsync(i => i.IncomeId == id);
+        var existing = await context.Incomes.FirstOrDefaultAsync(i => i.IncomeId == id && i.UserId == userId);
         if (existing is null)
             return false;
 
@@ -78,9 +83,9 @@ public class IncomeService(AppDbContext context) : IIncomeService
         return true;
     }
 
-    public async Task<bool> DeleteIncomeAsync(Guid id)
+    public async Task<bool> DeleteIncomeAsync(Guid id, Guid userId)
     {
-        var income = await context.Incomes.FirstOrDefaultAsync(i => i.IncomeId == id);
+        var income = await context.Incomes.FirstOrDefaultAsync(i => i.IncomeId == id && i.UserId == userId);
         if (income is null)
             return false;
 

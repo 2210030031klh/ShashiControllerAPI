@@ -24,6 +24,7 @@ public class BudgetService(AppDbContext context) : IBudgetService
     public async Task<CreateBudgetDto> AddBudgetAsync(CreateBudgetDto budget, Guid userId)
     {
         // Check if budget already exists for this category/month/year
+    
         var exists = await context.Budgets.AnyAsync(b =>
             b.UserId == userId &&
             b.CategoryId == budget.CategoryId &&
@@ -54,24 +55,24 @@ public class BudgetService(AppDbContext context) : IBudgetService
         };
     }
 
-    public async Task<bool> UpdateBudgetAsync(Guid id, CreateBudgetDto budget)
-    {
-        var existing = await context.Budgets.FirstOrDefaultAsync(b => b.BudgetId == id);
-        if (existing is null)
+    public async Task<bool> UpdateBudgetAsync(Guid id, CreateBudgetDto budget, Guid userId)
+        {
+            var existing = await context.Budgets.FirstOrDefaultAsync(b => b.BudgetId == id && b.UserId == userId);
+            if (existing is null)
             return false;
 
-        existing.Amount = budget.Amount;
-        existing.Month = budget.Month;
-        existing.Year = budget.Year;
-        existing.CategoryId = budget.CategoryId;
+            existing.Amount = budget.Amount;
+            existing.Month = budget.Month;
+            existing.Year = budget.Year;
+            existing.CategoryId = budget.CategoryId;
 
-        await context.SaveChangesAsync();
-        return true;
-    }
+            await context.SaveChangesAsync();
+            return true;
+        }
 
-    public async Task<bool> DeleteBudgetAsync(Guid id)
+    public async Task<bool> DeleteBudgetAsync(Guid id, Guid userId)
     {
-        var budget = await context.Budgets.FirstOrDefaultAsync(b => b.BudgetId == id);
+        var budget = await context.Budgets.FirstOrDefaultAsync(b => b.BudgetId == id && b.UserId == userId);
         if (budget is null)
             return false;
 

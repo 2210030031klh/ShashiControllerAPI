@@ -40,7 +40,9 @@ public class BudgetController(IBudgetService budgetService) : ControllerBase
     [HttpPut("{id}")]
     public async Task<ActionResult> UpdateBudget(Guid id, CreateBudgetDto budget)
     {
-        var updated = await budgetService.UpdateBudgetAsync(id, budget);
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var updated = await budgetService.UpdateBudgetAsync(id, budget,userId);
+
         return updated ? NoContent() : NotFound($"Budget with ID {id} not found.");
     }
 
@@ -48,7 +50,8 @@ public class BudgetController(IBudgetService budgetService) : ControllerBase
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteBudget(Guid id)
     {
-        var deleted = await budgetService.DeleteBudgetAsync(id);
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var deleted = await budgetService.DeleteBudgetAsync(id, userId);
         return deleted ? NoContent() : NotFound($"Budget with ID {id} not found.");
     }
 
